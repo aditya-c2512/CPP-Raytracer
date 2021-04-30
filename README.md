@@ -4,4 +4,4 @@ This is a repository of my Raytracer created from scratch in C++. Resources : Sc
 Initial Output for PPM Filewriting :
 ![progress 1.png](progress_1.png)
 Current Output for Raytraced Scene :
-![progress 2.png](progress_2.png)
+![progress 3.png](progress_3.png)
