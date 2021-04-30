@@ -4,8 +4,25 @@
 #include <iostream>
 #include <fstream>
 
+bool hit_sphere(const Point3& center, double radius, const Ray& ray)
+{
+    Vec3 oc = ray.origin() - center;
+    //ray = A +tB
+    //C = center
+    // t^2*(B.B) + 2t*B.(A-C) + (A-C).(A-C)-r^2 = 0
+    auto a = dot(ray.direction(), ray.direction());
+    auto b = 2.0 * dot(oc, ray.direction());
+    auto c = dot(oc, oc) - radius * radius;
+    auto discriminant = b * b - 4 * a * c;
+    return (discriminant > 0);
+}
+
 Color ray_color(const Ray& ray)
 {
+    if (hit_sphere(Point3(0, 0, -1), 0.5, ray))
+    {
+        return Color(1.0, 0.0, 0.0);
+    }
     Vec3 unit_direction = unit_vector(ray.dir);
     auto t = 0.5 * (unit_direction.y() + 1.0);
     return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
