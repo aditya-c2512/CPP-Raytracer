@@ -21,7 +21,7 @@ bool Sphere::hit(const Ray& ray, double t_min, double t_max, hit_record& rec) co
     Vec3 oc = ray.origin() - center;
     //ray = A +tB
     //C = center
-    // t^2*(B.B) + 2t*B.(A-C) + (A-C).(A-C)-r^2 = 0
+    //t^2*(B.B) + 2t*B.(A-C) + (A-C).(A-C)-r^2 = 0
     auto a = ray.direction().length_squared();
     auto b = dot(oc, ray.direction());
     auto c = oc.length_squared() - radius * radius;

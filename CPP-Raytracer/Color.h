@@ -11,9 +11,10 @@ void write_color(std::ostream& out, Color pixel_color, int samples) //FUNCTION T
     double b = pixel_color.z();
 
     auto scale = 1.0 / samples;
-    r *= scale;
-    g *= scale;
-    b *= scale;
+    //GAMMA CORRECTED RGB VALUES
+    r = sqrt(r * scale);
+    g = sqrt(r * scale);
+    b = sqrt(r * scale);
 
     //std::cout << r << " " << g << " " << b << endl;
 

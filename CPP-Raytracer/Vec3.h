@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cmath>
+#include "RTMath.h"
 
 using namespace std;
 
@@ -123,6 +124,35 @@ inline Vec3 cross(const Vec3& u, const Vec3& v) // RETURNS U X V
 inline Vec3 unit_vector(Vec3 v) //RETURNS UNIT VECTOR OF PARAMETER
 {
 	return v / v.length();
+}
+
+//RANDOM VECTOR GENERATION FOR REFLECTION
+inline Vec3 random_vec()
+{
+	return Vec3(random(), random(), random());
+}
+inline Vec3 random_vec(double min, double max)
+{
+	return Vec3(random(min, max), random(min, max), random(min, max));
+}
+Vec3 random_in_unit_sphere()//RETURNS VECTOR OF LENGTH 1
+{
+	while (true)
+	{
+		Vec3 p = random_vec(-1, 1);
+		if (p.length_squared() >= 1) continue;
+		return p;
+	}
+}
+Vec3 random_unit_vector() //INCORRECT LAMBERTIAN DISTRIBUTION
+{
+	return unit_vector(random_in_unit_sphere());
+}
+Vec3 random_vec_hemisphere(const Vec3& normal) //TRUE LAMBERTIAN DISTRIBUTION
+{
+	Vec3 in_unit_sphere = random_in_unit_sphere();
+	if (dot(in_unit_sphere, normal) > 0.0) return in_unit_sphere;
+	else return -in_unit_sphere;
 }
 
 #endif

@@ -7,14 +7,18 @@
 #include <iostream>
 #include <fstream>
 
-Color ray_color(const Ray& ray, const Hittable& world) //DECIDES COL0R ON A RAYTRACE
+Color ray_color(const Ray& ray, const Hittable& world, int depth) //DECIDES COL0R ON A RAYTRACE
 {
     hit_record rec;
-    if (world.hit(ray, 0, INFINITY, rec))
+    if (depth <= 0)return Color(0, 0, 0);//DEPTH TESTING
+
+    if (world.hit(ray, 0.001, INFINITY, rec))
     {
-        return 0.5 * (rec.normal + Color(1.0, 1.0, 1.0));
+        Point3 target = rec.p + random_vec_hemisphere(rec.normal); //TARGET = (P+N) + S (which is random vector in unit sphere about P+N)
+        return 0.5 * ray_color(Ray(rec.p, target - rec.p), world, depth-1);
     }
 
+    //IF RAYS DONT HIT A SPHERE, THIS COLOR IS RETURNED
     Vec3 unit_direction = unit_vector(ray.direction());
     auto t = 0.5 * (unit_direction.y() + 1.0);
     return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
@@ -23,11 +27,12 @@ Color ray_color(const Ray& ray, const Hittable& world) //DECIDES COL0R ON A RAYT
 using namespace std;
 int main() 
 {
-    //IMAGE DIMENSIONS
+    //IMAGE DIMENSIONS AND CONSTANTS
     const auto aspectRatio = 16.0 / 9.0;
     const int iWidth = 1920;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
     const int samples = 10;
+    const int max_depth = 50;
 
     //WORLD OBJECTS
     Hittable_List world;
@@ -51,7 +56,7 @@ int main()
                 auto u = (i + random()) / (iWidth - 1.0);
                 auto v = (j + random()) / (iHeight - 1.0);
                 Ray ray = cam.get_ray(u, v);
-                pixel_color += ray_color(ray, world);
+                pixel_color += ray_color(ray, world, 50);
             }
             write_color(image, pixel_color, samples);
         }
