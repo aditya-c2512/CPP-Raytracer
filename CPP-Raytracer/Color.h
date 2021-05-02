@@ -13,8 +13,8 @@ void write_color(std::ostream& out, Color pixel_color, int samples) //FUNCTION T
     auto scale = 1.0 / samples;
     //GAMMA CORRECTED RGB VALUES
     r = sqrt(r * scale);
-    g = sqrt(r * scale);
-    b = sqrt(r * scale);
+    g = sqrt(g * scale);
+    b = sqrt(b * scale);
 
     //std::cout << r << " " << g << " " << b << endl;
 
