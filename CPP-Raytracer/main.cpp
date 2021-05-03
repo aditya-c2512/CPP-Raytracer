@@ -4,6 +4,7 @@
 #include "Hittable_List.h"
 #include "Sphere.h"
 #include "Camera.h"
+#include "Material.h"
 #include <iostream>
 #include <fstream>
 
@@ -14,8 +15,11 @@ Color ray_color(const Ray& ray, const Hittable& world, int depth) //DECIDES COL0
 
     if (world.hit(ray, 0.001, INFINITY, rec))
     {
-        Point3 target = rec.p + random_vec_hemisphere(rec.normal); //TARGET = (P+N) + S (which is random vector in unit sphere about P+N)
-        return 0.5 * ray_color(Ray(rec.p, target - rec.p), world, depth-1);
+        Color attenuation;
+        Ray scattered;
+        if (rec.material->scatter(ray, rec, attenuation, scattered))
+            return attenuation * ray_color(scattered, world, depth - 1);
+        return Color(0, 0, 0);
     }
 
     //IF RAYS DONT HIT A SPHERE, THIS COLOR IS RETURNED
@@ -31,13 +35,21 @@ int main()
     const auto aspectRatio = 16.0 / 9.0;
     const int iWidth = 1920;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
-    const int samples = 10;
-    const int max_depth = 50;
+    const int samples = 100;
+    const int max_depth = 100;
 
     //WORLD OBJECTS
     Hittable_List world;
-    world.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
-    world.add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
+
+    auto MAT_Ground = make_shared<MAT_Lambertian>(Color(0.1, 0.5, 0.1));
+    auto MAT_CenterSphere = make_shared<MAT_Lambertian>(Color(0.6, 0.4, 0.7));
+    auto MAT_LeftSphere = make_shared<MAT_Metallic>(Color(0.8, 0.8, 0.8));
+    auto MAT_RightSphere = make_shared<MAT_Metallic>(Color(0.8, 0.6, 0.2));
+
+    world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, MAT_Ground));
+    world.add(make_shared<Sphere>(Point3(0.0, -0.0, -1.0), 0.5, MAT_CenterSphere));
+    world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, MAT_LeftSphere));
+    world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, MAT_RightSphere));
 
     //CAMERA
     Camera cam;

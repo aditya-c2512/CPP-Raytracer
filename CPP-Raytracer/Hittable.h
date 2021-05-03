@@ -2,11 +2,15 @@
 #define HITTABLE_H
 
 #include "Ray.h"
+#include "RTMath.h"
+
+class Material;
 
 struct hit_record
 {
 	Point3 p;
 	Vec3 normal;
+	shared_ptr<Material> material;
 	double t;
 	bool front_facing;
 
