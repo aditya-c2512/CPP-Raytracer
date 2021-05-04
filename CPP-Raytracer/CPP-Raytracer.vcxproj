@@ -21,9 +21,12 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Cone.h" />
+    <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Hittable.h" />
     <ClInclude Include="Hittable_List.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Paraboloid.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RTMath.h" />
     <ClInclude Include="Sphere.h" />

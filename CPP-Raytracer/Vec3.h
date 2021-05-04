@@ -165,5 +165,14 @@ Vec3 reflect(const Vec3& v, const Vec3& n)
 {
 	return v - 2 * dot(v, n) * n;
 }
+//REFRACTION
+Vec3 refract(const Vec3& uv, const Vec3& n, double mu)
+{
+	auto cos_theta = fmin(dot(-uv, n), 1.0);
+	auto ray_out_perp = mu * (uv + cos_theta * n);
+	auto ray_out_parallel = -sqrt(fabs(1 - ray_out_perp.length_squared())) * n;
+
+	return ray_out_perp + ray_out_parallel;
+}
 
 #endif

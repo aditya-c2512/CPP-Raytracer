@@ -35,19 +35,20 @@ int main()
     const auto aspectRatio = 16.0 / 9.0;
     const int iWidth = 1920;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
-    const int samples = 100;
-    const int max_depth = 100;
+    const int samples = 20;
+    const int max_depth = 50;
 
     //WORLD OBJECTS
     Hittable_List world;
 
     auto MAT_Ground = make_shared<MAT_Lambertian>(Color(0.1, 0.5, 0.1));
     auto MAT_CenterSphere = make_shared<MAT_Lambertian>(Color(0.6, 0.4, 0.7));
-    auto MAT_LeftSphere = make_shared<MAT_Metallic>(Color(0.8, 0.8, 0.8));
+    auto MAT_LeftSphere = make_shared<MAT_Dielectric>(1.5);
     auto MAT_RightSphere = make_shared<MAT_Metallic>(Color(0.8, 0.6, 0.2));
 
     world.add(make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, MAT_Ground));
-    world.add(make_shared<Sphere>(Point3(0.0, -0.0, -1.0), 0.5, MAT_CenterSphere));
+    world.add(make_shared<Sphere>(Point3(0.0, -0.0, -1.0), 0.5, MAT_LeftSphere));
+    world.add(make_shared<Sphere>(Point3(0.0, -0.0, -1.0), -0.4, MAT_LeftSphere));
     world.add(make_shared<Sphere>(Point3(-1.0, 0.0, -1.0), 0.5, MAT_LeftSphere));
     world.add(make_shared<Sphere>(Point3(1.0, 0.0, -1.0), 0.5, MAT_RightSphere));
 
