@@ -6,22 +6,29 @@
 class Camera
 {
 public :
-    Camera()
+    Camera(Point3 lookFrom, Point3 lookAt, Vec3 vUp, double vfov, double aspectRatio, double aperture, double focus_dist)
     {
-        const auto aspectRatio = 16.0 / 9.0;
-        auto viewportHeight = 2.0;
+        auto theta = deg_to_rad(vfov);
+        auto h = tan(theta / 2.0);
+        auto viewportHeight = 2.0 * h;
         auto viewportWidth = viewportHeight * aspectRatio;
-        auto focalLength = 1.0;
 
-        origin = Point3(0, 0, 0);
-        horizontal = Vec3(viewportWidth, 0, 0);
-        vertical = Vec3(0, viewportHeight, 0);
-        lowerLeftCorner = origin - horizontal / 2 - vertical / 2 - Vec3(0, 0, focalLength);
+        w = unit_vector(lookFrom - lookAt);
+        u = unit_vector(cross(vUp, w));
+        v = cross(w, u);
+
+        origin = lookFrom;
+        horizontal = focus_dist * viewportWidth * u;
+        vertical = focus_dist * viewportHeight * v;
+        lowerLeftCorner = origin - horizontal / 2 - vertical / 2 - focus_dist * w;
+        lens_radius = aperture / 2.0;
     }
 
-    Ray get_ray(double u, double v)
+    Ray get_ray(double s, double t)
     {
-        return Ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
+        Vec3 rd = lens_radius * random_vec_disk();
+        Vec3 offset = u * rd.x() + v * rd.y();
+        return Ray(origin + offset, lowerLeftCorner + s * horizontal + t * vertical - origin - offset);
     }
 
 private :
@@ -29,5 +36,8 @@ private :
     Point3 lowerLeftCorner;
     Vec3 horizontal;
     Vec3 vertical;
+
+    Vec3 u, v, w;
+    double lens_radius;
 };
 #endif

@@ -32,17 +32,18 @@ public :
 class MAT_Metallic : public Material
 {
 public :
-	MAT_Metallic(const Color& a) : albedo(a) {}
+	MAT_Metallic(const Color& a, double f) : albedo(a), fuzz(f) {}
 
 	virtual bool scatter(const Ray& ray_in, const hit_record& rec, Color& attenuation, Ray& scattered) const override
 	{
 		auto scatter_direction = reflect(unit_vector(ray_in.direction()), rec.normal);
-		scattered = Ray(rec.p, scatter_direction);
+		scattered = Ray(rec.p, scatter_direction + fuzz*random_in_unit_sphere());
 		attenuation = albedo;
 		return (dot(scatter_direction, rec.normal) > 0);
 	}
 
 	Color albedo;
+	double fuzz;
 };
 
 class MAT_Dielectric : public Material

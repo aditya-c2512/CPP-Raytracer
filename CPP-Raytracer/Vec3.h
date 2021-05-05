@@ -159,6 +159,15 @@ Vec3 random_vec_hemisphere(const Vec3& normal) //TRUE LAMBERTIAN DISTRIBUTION
 	if (dot(in_unit_sphere, normal) > 0.0) return in_unit_sphere;
 	else return -in_unit_sphere;
 }
+Vec3 random_vec_disk()
+{
+	while (true)
+	{
+		Vec3 p = Vec3(random(-1, 1), random(-1, 1), 0);
+		if (p.length_squared() >= 1) continue;
+		return p;
+	}
+}
 
 //REFLECTION
 Vec3 reflect(const Vec3& v, const Vec3& n)
