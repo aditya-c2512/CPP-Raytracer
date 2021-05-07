@@ -1,3 +1,7 @@
+/*
+* Sphere.h : This is the user defined data type that represents a sphere in the world.
+* -> See the comments to learn more about each function and variable.
+*/
 #ifndef SPHERE_H
 #define SPHERE_H
 
@@ -17,7 +21,7 @@ public :
     shared_ptr<Material> material;
 };
 
-bool Sphere::hit(const Ray& ray, double t_min, double t_max, hit_record& rec) const
+bool Sphere::hit(const Ray& ray, double t_min, double t_max, hit_record& rec) const //SEE ATTACHED NOTES FOR FIGURES AND EXPLANATIONS
 {
     Vec3 oc = ray.origin() - center;
     //ray = A +tB

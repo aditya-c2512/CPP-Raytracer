@@ -1,3 +1,7 @@
+/*
+* Hittable_List.h : Contains class Hittable_List. Wrapper around a vector of Hittable object piinters.
+* -> hit(...) - This function checks the closest Hittable object intersected by a ray.
+*/
 #ifndef HITTABLE_LIST_H
 #define HITTABLE_LIST_H
 

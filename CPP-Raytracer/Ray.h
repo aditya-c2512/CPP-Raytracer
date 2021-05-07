@@ -1,3 +1,7 @@
+/*
+* Ray.h : Contains Ray class
+* Please see the comments to know more about each function.
+*/
 #ifndef RAY_H
 #define RAY_H
 

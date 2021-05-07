@@ -1,7 +1,12 @@
+/*
+* Hittable.h : Contains main Hittable parent class. Inherit class Hittable to make a shape raytraceable. Also includes hit_record. The raytrace will
+*			   store the desired information in this struct type. Material class is forward declared here.
+* -> struct hit_record - p is point the ray hits the Hittable. normal is normal vector at that point p. t is constant multiplier for ray(a,b) = a + tb. 
+*						 bool front_facing is true if ray hits Hittable from outside and vice versa. set_face_normal(...) sets normal according to front_facing.
+*/
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-#include "Ray.h"
 #include "RTMath.h"
 
 class Material;

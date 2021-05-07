@@ -1,3 +1,7 @@
+/*
+* Color.h : Contains functions especially designed to work with RGB Colors.
+* -> write_color(...) - Sets the gamma corrected RGB values in range [0,255]
+*/
 #ifndef COLOR_H
 #define COLOR_H
 
@@ -15,8 +19,6 @@ void write_color(std::ostream& out, Color pixel_color, int samples) //FUNCTION T
     r = sqrt(r * scale);
     g = sqrt(g * scale);
     b = sqrt(b * scale);
-
-    //std::cout << r << " " << g << " " << b << endl;
 
     // Write the translated [0,255] value of each color component.
     out << static_cast<int>(256 * clamp(r, 0, 0.99)) << ' ' //R

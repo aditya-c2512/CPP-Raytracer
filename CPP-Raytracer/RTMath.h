@@ -1,3 +1,8 @@
+/*
+* RTMath.h : Utility class for all functions, values and basic files needed by other classes and functions.
+* -> Include this file if you need to use - Vec3.h, Ray.h, limits, or math functions.
+* -> Also includes - Degree to Radians, Random between 0 and 1, Random between 2 numbers, Clamping, values for Infinity and PI.
+*/
 #ifndef RTMATH_H
 #define RTMATH_H
 

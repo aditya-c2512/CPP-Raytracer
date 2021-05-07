@@ -1,3 +1,7 @@
+/*
+* Vec3.h : Contains the Vec3 class and utility functions to work with Vec3(x,y,z)
+* Please see the comments to know more about each function.
+*/
 #ifndef VEC3_H
 #define VEC3_H
 
@@ -159,7 +163,7 @@ Vec3 random_vec_hemisphere(const Vec3& normal) //TRUE LAMBERTIAN DISTRIBUTION
 	if (dot(in_unit_sphere, normal) > 0.0) return in_unit_sphere;
 	else return -in_unit_sphere;
 }
-Vec3 random_vec_disk()
+Vec3 random_vec_disk() //RETURNS A RANDOM VECTOR IN A UNIT RADIUS DISK
 {
 	while (true)
 	{
@@ -170,12 +174,12 @@ Vec3 random_vec_disk()
 }
 
 //REFLECTION
-Vec3 reflect(const Vec3& v, const Vec3& n)
+Vec3 reflect(const Vec3& v, const Vec3& n) //RETURNS REFLECTION OF VECTOR v ABOUT VECTOR n
 {
 	return v - 2 * dot(v, n) * n;
 }
 //REFRACTION
-Vec3 refract(const Vec3& uv, const Vec3& n, double mu)
+Vec3 refract(const Vec3& uv, const Vec3& n, double mu) //RETURNS REFRACTED RAY OF VECTOR uv ABOUT VECTOR n INTO A MEDIUM WITH REFRACTIVE INDEX mu
 {
 	auto cos_theta = fmin(dot(-uv, n), 1.0);
 	auto ray_out_perp = mu * (uv + cos_theta * n);
