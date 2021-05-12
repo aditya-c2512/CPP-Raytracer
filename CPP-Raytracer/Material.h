@@ -30,7 +30,7 @@ public :
 		*/
 		auto scatter_direction = rec.normal + random_unit_vector();
 		if (scatter_direction.near_zero()) scatter_direction = rec.normal;
-		scattered = Ray(rec.p, scatter_direction);
+		scattered = Ray(rec.p, scatter_direction, ray_in.time());
 		attenuation = albedo;
 		return true;
 	}
@@ -50,7 +50,7 @@ public :
 		* Below, the scatter direction is the reflection vector of the ray direction vector about the normal vector.
 		*/
 		auto scatter_direction = reflect(unit_vector(ray_in.direction()), rec.normal);
-		scattered = Ray(rec.p, scatter_direction + fuzz*random_in_unit_sphere());
+		scattered = Ray(rec.p, scatter_direction + fuzz*random_in_unit_sphere(), ray_in.time());
 		attenuation = albedo;
 		return (dot(scatter_direction, rec.normal) > 0);
 	}
@@ -83,7 +83,7 @@ public :
 		else
 			direction = refract(unit_direction, rec.normal, refraction_ratio);
 
-		scattered = Ray(rec.p, direction);
+		scattered = Ray(rec.p, direction, ray_in.time());
 		return true;
 	}
 

@@ -40,6 +40,10 @@ double clamp(double x, double min, double max)
 	if (x > max) return max;
 	return x;
 }
+int random_int(int min, int max)
+{
+	return static_cast<int>(random(min, max + 1));
+}
 
 #include "Ray.h"
 #include "Vec3.h"

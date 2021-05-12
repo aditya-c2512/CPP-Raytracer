@@ -4,11 +4,15 @@
 * -> ray_color(...) - This function returns the color traced/calculated by the ray thrown from camera through the pixel. RECURSIVE IN NATURE.
 * -> random_scene() - This function returns a list of Hittable objects spawned randomly/procedurally.
 */
+#include <cuda.h>
+#include <cuda_runtime_api.h>
 #include "RTMath.h"
 
 #include "Color.h"
 #include "Hittable_List.h"
 #include "Sphere.h"
+#include "Moving_Sphere.h"
+#include "Plane.h"
 #include "Camera.h"
 #include "Material.h"
 #include <iostream>
@@ -56,7 +60,9 @@ Hittable_List random_scene() //RETURNS A RANDOM HITTABLE LIST
                     Color albedo = random_vec() * random_vec();
                     MAT_Sphere = make_shared<MAT_Lambertian>(albedo);
 
-                    world.add(make_shared<Sphere>(center, 0.2, MAT_Sphere));
+                    auto center2 = center + Vec3(0, random(0, 0.5), 0);
+
+                    world.add(make_shared<Moving_Sphere>(center, center2, 0.0, 1.0, 0.2, MAT_Sphere));
                 }
                 else if (choose_mat < 0.95)
                 {
@@ -95,11 +101,15 @@ int main()
     const auto aspectRatio = 3.0 / 2.0;
     const int iWidth = 1920;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
-    const int samples = 10;//INCREASE FOR LESS NOISE
+    const int samples = 50;//INCREASE FOR LESS NOISE
     const int max_depth = 50;
 
     //WORLD OBJECTS
     Hittable_List world = random_scene();
+    Vec3 nPlane(0, -1, 0);
+    Point3 pPlane(0, 0, 0);
+    Color cPlane(0.5, 0.5, 0.5);
+    //world.add(make_shared<Plane>(nPlane,pPlane, make_shared<MAT_Lambertian>(cPlane)));
 
     //CAMERA
     Point3 lookFrom(13, 2, 3);
@@ -108,7 +118,7 @@ int main()
     auto dist_to_focus = 10.0;//DISTANCE FROM FOCUS PLANE
     auto aperture = 0.1;//DIAMETER OF APERTURE
 
-    Camera cam(lookFrom, lookAt, vUp, 20, aspectRatio, aperture, dist_to_focus);
+    Camera cam(lookFrom, lookAt, vUp, 20, aspectRatio, aperture, dist_to_focus, 0.0, 1.0);
 
     //WRITING TO FRAMEBUFFER
     vector<vector<Color>> frameBuffer(iHeight, vector<Color>(iWidth));

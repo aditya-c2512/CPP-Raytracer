@@ -27,9 +27,6 @@
     <ClInclude Include="Vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Hittable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Sphere.h">
       <Filter>Header Files\Shapes</Filter>
     </ClInclude>
@@ -53,6 +50,21 @@
     </ClInclude>
     <ClInclude Include="Paraboloid.h">
       <Filter>Header Files\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Moving_Sphere.h">
+      <Filter>Header Files\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Header Files\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Hittable.h">
+      <Filter>Header Files\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Header Files\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="BVH_Node.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

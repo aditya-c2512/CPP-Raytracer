@@ -15,6 +15,7 @@ public :
 	Sphere(Point3 cen, double r, shared_ptr<Material> m) : center(cen), radius(r), material(m) {};
 
 	virtual bool hit(const Ray& ray, double t_min, double t_max, hit_record& rec) const override;
+    virtual bool bounding_box(double time0, double time1, AABB& box) const override;
 
 	Point3 center;
 	double radius;
@@ -40,12 +41,19 @@ bool Sphere::hit(const Ray& ray, double t_min, double t_max, hit_record& rec) co
         root = (-b + sqrt(discriminant)) / a;
         if (root < t_min || root > t_max) return false;
     }
+    //std::cerr << "Sphere Hit" << std::flush;
     rec.t = root;
     rec.p = ray.at(rec.t);//Finds Point on Sphere which hit the ray.
     Vec3 outward_normal = (rec.p - center) / radius;
     rec.set_face_normal(ray, outward_normal);
     rec.material = material;
 
+    return true;
+}
+
+bool Sphere::bounding_box(double time0, double time1, AABB& box) const
+{
+    box = AABB(center - Vec3(radius, radius, radius), center + Vec3(radius, radius, radius));
     return true;
 }
 
