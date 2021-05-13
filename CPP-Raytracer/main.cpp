@@ -39,11 +39,26 @@ Color ray_color(const Ray& ray, const Hittable& world, int depth) //DECIDES COL0
     return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
 
+Hittable_List two_spheres() 
+{
+    Hittable_List objects;
+
+    auto checker = make_shared<Checker_Texture>(Color(0.2, 0.3, 0.1), Color(0.9, 0.9, 0.9));
+
+    objects.add(make_shared<Sphere>(Point3(0, -10, 0), 10, make_shared<MAT_Lambertian>(checker)));
+    objects.add(make_shared<Sphere>(Point3(0, 10, 0), 10, make_shared<MAT_Lambertian>(checker)));
+
+    return objects;
+}
+
+
 Hittable_List random_scene() //RETURNS A RANDOM HITTABLE LIST
 {
     Hittable_List world;
 
-    auto MAT_Ground = make_shared<MAT_Lambertian>(Color(0.5, 0.5, 0.5));
+    auto T_Checker = make_shared<Checker_Texture>(Color(0.2, 0.3, 0.1), Color(0.9, 0.9, 0.9));
+    auto MAT_Ground = make_shared<MAT_Lambertian>(T_Checker);
+    world.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, MAT_Ground));
 
     for (int a = -11; a < 11; a++)
     {
@@ -99,26 +114,23 @@ int main()
 {
     //IMAGE DIMENSIONS AND CONSTANTS
     const auto aspectRatio = 3.0 / 2.0;
-    const int iWidth = 1920;
+    const int iWidth = 480;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
-    const int samples = 50;//INCREASE FOR LESS NOISE
-    const int max_depth = 50;
+    const int samples = 10;//INCREASE FOR LESS NOISE
+    const int max_depth = 10;
 
     //WORLD OBJECTS
     Hittable_List world = random_scene();
-    Vec3 nPlane(0, -1, 0);
-    Point3 pPlane(0, 0, 0);
-    Color cPlane(0.5, 0.5, 0.5);
-    //world.add(make_shared<Plane>(nPlane,pPlane, make_shared<MAT_Lambertian>(cPlane)));
 
     //CAMERA
     Point3 lookFrom(13, 2, 3);
     Point3 lookAt(0, 0, 0);
     Vec3 vUp(0, 1, 0);
+    double vFOV = 40;
     auto dist_to_focus = 10.0;//DISTANCE FROM FOCUS PLANE
     auto aperture = 0.1;//DIAMETER OF APERTURE
 
-    Camera cam(lookFrom, lookAt, vUp, 20, aspectRatio, aperture, dist_to_focus, 0.0, 1.0);
+    Camera cam(lookFrom, lookAt, vUp, vFOV, aspectRatio, aperture, dist_to_focus, 0.0, 1.0);
 
     //WRITING TO FRAMEBUFFER
     vector<vector<Color>> frameBuffer(iHeight, vector<Color>(iWidth));

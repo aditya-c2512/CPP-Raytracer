@@ -13,6 +13,7 @@ FEATURES :
 FEATURE ROADMAP :
 - More simple shapes. [Cylinder, Cone, Cube, Paraboloid]
 - Bounding Volume Hierarchy[BVH]. => DONE.
+- Textures. => DONE
 - Lights and Shadows.
 - Parallelizing the main render loop. [CUDA]
 - Direct PNG Image formation.
@@ -20,4 +21,4 @@ FEATURE ROADMAP :
 - GUI to change camera properties.
 
 Current Output for Raytraced Scene :
-![final_render.png](render_1.png)
+![render.png](render.png)

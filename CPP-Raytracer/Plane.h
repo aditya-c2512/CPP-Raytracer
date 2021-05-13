@@ -38,7 +38,7 @@ bool Plane::hit(const Ray& ray, double t_min, double t_max, hit_record& rec) con
 	//std::cerr << "Plane Hit" << std::flush;
 	rec.t = root;
 	rec.p = ray.at(rec.t);
-	rec.normal = unit_vector(normal());
+	rec.normal = -unit_vector(normal());
 	rec.material = material;
 
 	return true;

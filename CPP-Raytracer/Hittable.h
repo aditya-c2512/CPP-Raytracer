@@ -20,6 +20,9 @@ struct hit_record
 	double t;
 	bool front_facing;
 
+	//TEXTURE COORDINATES
+	double u; double v;
+
 	void set_face_normal(const Ray& ray, const Vec3& outward_normal)
 	{
 		front_facing = (dot(ray.direction(), outward_normal) < 0.0);

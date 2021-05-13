@@ -17,6 +17,15 @@ public :
 	virtual bool hit(const Ray& ray, double t_min, double t_max, hit_record& rec) const override;
     virtual bool bounding_box(double time0, double time1, AABB& box) const override;
 
+    static void get_sphere_uv(const Point3& p, double& u, double& v)
+    {
+        auto theta = acos(-p.y());
+        auto phi = atan2(-p.z(), p.x()) + PI;
+
+        u = phi / (2 * PI);
+        v = theta / PI;
+    }
+
 	Point3 center;
 	double radius;
     shared_ptr<Material> material;
@@ -46,6 +55,7 @@ bool Sphere::hit(const Ray& ray, double t_min, double t_max, hit_record& rec) co
     rec.p = ray.at(rec.t);//Finds Point on Sphere which hit the ray.
     Vec3 outward_normal = (rec.p - center) / radius;
     rec.set_face_normal(ray, outward_normal);
+    get_sphere_uv(outward_normal, rec.u, rec.v);
     rec.material = material;
 
     return true;

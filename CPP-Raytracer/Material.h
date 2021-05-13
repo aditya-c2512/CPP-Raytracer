@@ -8,6 +8,7 @@
 
 #include "RTMath.h"
 #include "Hittable.h"
+#include "Texture.h"
 
 struct hit_record;
 
@@ -20,7 +21,8 @@ public :
 class MAT_Lambertian : public Material //CLASS FOT DIFFUSE MATERIALS
 {
 public :
-	MAT_Lambertian(const Color& a) : albedo(a) {}
+	MAT_Lambertian(const Color& a) : albedo(make_shared<Solid_Color>(a)) {}
+	MAT_Lambertian(shared_ptr<Texture> a) : albedo(a) {}
 
 	virtual bool scatter(const Ray& ray_in, const hit_record& rec, Color& attenuation, Ray& scattered) const override
 	{
@@ -31,11 +33,11 @@ public :
 		auto scatter_direction = rec.normal + random_unit_vector();
 		if (scatter_direction.near_zero()) scatter_direction = rec.normal;
 		scattered = Ray(rec.p, scatter_direction, ray_in.time());
-		attenuation = albedo;
+		attenuation = albedo->value(rec.u, rec.v, rec.p);
 		return true;
 	}
 
-	Color albedo;
+	shared_ptr<Texture> albedo;
 };
 
 class MAT_Metallic : public Material //CLASS FOR METALLIC MATERIALS
