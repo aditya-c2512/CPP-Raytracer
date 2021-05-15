@@ -33,6 +33,7 @@
     <ClInclude Include="Paraboloid.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RTMath.h" />
+    <ClInclude Include="Scenes.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Vec3.h" />
