@@ -77,4 +77,27 @@ Hittable_List random_scene() //RETURNS A RANDOM HITTABLE LIST
     return world;
 }
 
+Hittable_List two_perlin_spheres() 
+{
+    Hittable_List objects;
+
+    auto pertext = make_shared<Perlin_Texture>(4);
+    objects.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, make_shared<MAT_Lambertian>(pertext)));
+    objects.add(make_shared<Sphere>(Point3(0, 2, 0), 2, make_shared<MAT_Lambertian>(pertext)));
+
+    return objects;
+}
+
+Hittable_List earth()
+{
+    Hittable_List world;
+
+    auto TEX_Earth = make_shared<Image_Texture>("earthmap.jpg");
+    auto MAT_Earth = make_shared<MAT_Lambertian>(TEX_Earth);
+    auto earth = make_shared<Sphere>(Point3(0, 0, 0), 2, MAT_Earth);
+
+    world.add(earth);
+    return world;
+}
+
 #endif

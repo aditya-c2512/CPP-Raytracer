@@ -4,6 +4,8 @@
 * -> ray_color(...) - This function returns the color traced/calculated by the ray thrown from camera through the pixel. RECURSIVE IN NATURE.
 * -> random_scene() - This function returns a list of Hittable objects spawned randomly/procedurally.
 */
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
 #include "RTMath.h"
 #include "Color.h"
 #include "Hittable_List.h"
@@ -42,10 +44,10 @@ int main()
     const int iWidth = 1920;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
     const int samples = 10;//INCREASE FOR LESS NOISE
-    const int max_depth = 10;
+    const int max_depth = 5;
 
     //WORLD OBJECTS
-    Hittable_List world = random_scene();
+    Hittable_List world = earth();
 
     //CAMERA
     Point3 lookFrom(13, 2, 3);
@@ -59,6 +61,7 @@ int main()
 
     //WRITING TO FRAMEBUFFER
     vector<vector<Color>> frameBuffer(iHeight, vector<Color>(iWidth));
+    unsigned char* data = new unsigned char[iWidth*iHeight*3];
 
     for (int j = iHeight - 1; j >= 0; --j) 
     {
@@ -76,18 +79,23 @@ int main()
             frameBuffer[iHeight - 1 - j][i] = pixel_color;
         }
     }
-
-    //WRITING FRAMEBUFFER TO RENDER.PPM
-    ofstream image{ "render.ppm", ios::out | ios::trunc };
-    image << "P3\n" << iWidth << ' ' << iHeight << "\n255\n";
+    
+    int index = 0;
+    //WRITING FRAMEBUFFER TO RENDER.PNG
     for (int i = 0; i < iHeight; i++)
     {
         for (int j = 0; j < iWidth; j++)
         {
-            write_color(image, frameBuffer[i][j], samples);
+            auto scale = 1.0 / samples;
+            double r = sqrt(frameBuffer[i][j].x() * scale);
+            double g = sqrt(frameBuffer[i][j].y() * scale);
+            double b = sqrt(frameBuffer[i][j].z() * scale);
+
+            data[index++] = (unsigned char)(256 * clamp(r, 0, 0.99));
+            data[index++] = (unsigned char)(256 * clamp(g, 0, 0.99));
+            data[index++] = (unsigned char)(256 * clamp(b, 0, 0.99));
         }
     }
-    image.close();
-
+    stbi_write_png("render.png", iWidth, iHeight, 3, data, iWidth * 3);
     std::cerr << "\nDone.\n";
 }
