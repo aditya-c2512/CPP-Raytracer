@@ -26,6 +26,7 @@ Color ray_color(const Ray& ray, const Hittable& world, int depth) //DECIDES COL0
 
     if (world.hit(ray, 0.001, INFINITY, rec))
     {
+        //std::cerr << "Hit World" << std::flush;
         Color attenuation;
         Ray scattered;
         if (rec.material->scatter(ray, rec, attenuation, scattered))
@@ -39,7 +40,7 @@ Color ray_color(const Ray& ray, const Hittable& world, int depth) //DECIDES COL0
     return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
 }
 
-void raytrace(int* nextTileX, int* nextTileY, mutex* tileInfoMutex, int tileWidth, int tileHeight, int nx, int ny, int ns, int depth, Hittable_List world, Camera cam, unsigned char* data)
+void raytrace(int* nextTileX, int* nextTileY, std::mutex* tileInfoMutex, int tileWidth, int tileHeight, int nx, int ny, int ns, int depth, Hittable_List world, Camera cam, char* data)
 {
     while (true)
     {
@@ -80,15 +81,15 @@ void raytrace(int* nextTileX, int* nextTileY, mutex* tileInfoMutex, int tileWidt
                 color /= double(ns);
                 color = Color(sqrt(color[0]), sqrt(color[1]), sqrt(color[2]));
 
-                double r = 255.99 * color[0];
-                double g = 255.99 * color[1];
-                double b = 255.99 * color[2];
+                int r = (int)(255.99 * color[0]);
+                int g = (int)(255.99 * color[1]);
+                int b = (int)(255.99 * color[2]);
 
                 int bufferIdx = (i + ((ny - 1) - j) * nx) * 3;
 
-                data[bufferIdx] = (unsigned char)(256 * clamp(r, 0, 0.99));
-                data[bufferIdx+1] = (unsigned char)(256 * clamp(g, 0, 0.99));
-                data[bufferIdx+2] = (unsigned char)(256 * clamp(b, 0, 0.99));
+                data[bufferIdx + 0] = r;
+                data[bufferIdx + 1] = g;
+                data[bufferIdx + 2] = b;
             }
         }
     }
@@ -110,8 +111,8 @@ int main()
     const auto aspectRatio = 16.0 / 9.0;
     const int iWidth = 1920;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
-    const int samples = 5;//INCREASE FOR LESS NOISE
-    const int max_depth = 1;
+    const int samples = 10;//INCREASE FOR LESS NOISE
+    const int max_depth = 10;
 
     //WORLD OBJECTS
     Hittable_List world = random_scene();
@@ -128,7 +129,7 @@ int main()
 
     //WRITING TO FRAMEBUFFER
     vector<vector<Color>> frameBuffer(iHeight, vector<Color>(iWidth));
-    unsigned char* data = new unsigned char[iWidth*iHeight*3];
+    char* data = new char[iWidth*iHeight*3];
 
     /*for (int j = iHeight - 1; j >= 0; --j) 
     {
@@ -141,7 +142,7 @@ int main()
                 auto u = (i + random()) / (iWidth - 1.0);
                 auto v = (j + random()) / (iHeight - 1.0);
                 Ray ray = cam.get_ray(u, v);// Getting ray originating from camera through the pixel with coords (u,v).
-                pixel_color += ray_color(ray, world, 50);// Getting Color the ray results in at the end.
+                pixel_color += ray_color(ray, world, max_depth);// Getting Color the ray results in at the end.
             }
             frameBuffer[iHeight - 1 - j][i] = pixel_color;
         }
@@ -158,18 +159,18 @@ int main()
             double g = sqrt(frameBuffer[i][j].y() * scale);
             double b = sqrt(frameBuffer[i][j].z() * scale);
 
-            data[index++] = (unsigned char)(256 * clamp(r, 0, 0.99));
-            data[index++] = (unsigned char)(256 * clamp(g, 0, 0.99));
-            data[index++] = (unsigned char)(256 * clamp(b, 0, 0.99));
+            data[index++] = (256 * clamp(r, 0, 0.99));
+            data[index++] = (256 * clamp(g, 0, 0.99));
+            data[index++] = (256 * clamp(b, 0, 0.99));
         }
     }*/
-
+    std::cerr << threadsNum << std::flush;
     for (unsigned t = 0; t < threadsNum; t++)
     {
         threads[t] = thread(raytrace, &nextTileX, &nextTileY, &tileInfoMutex, tileWidth, tileHeight, iWidth, iHeight, samples, max_depth, world, cam, data);
     }
 
-    for (unsigned int t = 0; t < threadsNum; t++) 
+    for (unsigned int t = 0; t < threadsNum; t++)
     {
         threads[t].join();
     }
