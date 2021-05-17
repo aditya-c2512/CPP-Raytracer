@@ -19,28 +19,25 @@
 #include <thread>
 #include <mutex>
 
-Color ray_color(const Ray& ray, const Hittable& world, int depth) //DECIDES COL0R ON A RAYTRACE
+Color ray_color(const Ray& ray, const Color& background,const Hittable& world, int depth) //DECIDES COL0R ON A RAYTRACE
 {
     hit_record rec;//STORES IMPORTANT INFO OF THE CLOSEST OBJECT HIT BY A RAY
     if (depth <= 0)return Color(0, 0, 0);//DEPTH TESTING
 
-    if (world.hit(ray, 0.001, INFINITY, rec))
-    {
-        //std::cerr << "Hit World" << std::flush;
-        Color attenuation;
-        Ray scattered;
-        if (rec.material->scatter(ray, rec, attenuation, scattered))
-            return attenuation * ray_color(scattered, world, depth - 1);
-        return Color(0, 0, 0);
-    }
+    if (!world.hit(ray, 0.001, INFINITY, rec))
+        return background;
 
-    //IF RAYS DONT HIT A SPHERE, THIS COLOR IS RETURNED
-    Vec3 unit_direction = unit_vector(ray.direction());
-    auto t = 0.5 * (unit_direction.y() + 1.0);
-    return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0);
+    Ray scattered;
+    Color attenuation;
+    Color emitted = rec.material->emitted(rec.u, rec.v, rec.p);
+
+    if (!rec.material->scatter(ray, rec, attenuation, scattered))
+        return emitted;
+
+    return emitted + attenuation * ray_color(scattered, background, world, depth - 1);
 }
 
-void raytrace(int* nextTileX, int* nextTileY, std::mutex* tileInfoMutex, int tileWidth, int tileHeight, int nx, int ny, int ns, int depth, Hittable_List world, Camera cam, char* data)
+void raytrace(int* nextTileX, int* nextTileY, std::mutex* tileInfoMutex, int tileWidth, int tileHeight, int nx, int ny, int ns, int depth, Color background, Hittable_List world, Camera cam, char* data)
 {
     while (true)
     {
@@ -76,7 +73,7 @@ void raytrace(int* nextTileX, int* nextTileY, std::mutex* tileInfoMutex, int til
                     auto v = (j + random()) / (ny - 0.0);
 
                     Ray ray = cam.get_ray(u, v);
-                    color += ray_color(ray, world, depth);
+                    color += ray_color(ray, background, world, depth);
                 }
                 color /= double(ns);
                 color = Color(sqrt(color[0]), sqrt(color[1]), sqrt(color[2]));
@@ -108,18 +105,19 @@ int main()
     mutex tileInfoMutex;
 
     //IMAGE DIMENSIONS AND CONSTANTS
-    const auto aspectRatio = 16.0 / 9.0;
-    const int iWidth = 1920;
+    const auto aspectRatio = 1.0;
+    const int iWidth = 800;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
-    const int samples = 10;//INCREASE FOR LESS NOISE
-    const int max_depth = 10;
+    const int samples = 100;//INCREASE FOR LESS NOISE
+    const int max_depth = 20;
 
     //WORLD OBJECTS
-    Hittable_List world = random_scene();
+    Color background(0.0, 0.0, 0.0);
+    Hittable_List world = Cornell_Box();
 
     //CAMERA
-    Point3 lookFrom(13, 2, 3);
-    Point3 lookAt(0, 0, 0);
+    Point3 lookFrom(278, 278, -800);
+    Point3 lookAt(278, 278, 0);
     Vec3 vUp(0, 1, 0);
     double vFOV = 40;
     auto dist_to_focus = 10.0;//DISTANCE FROM FOCUS PLANE
@@ -128,46 +126,12 @@ int main()
     Camera cam(lookFrom, lookAt, vUp, vFOV, aspectRatio, aperture, dist_to_focus, 0.0, 1.0);
 
     //WRITING TO FRAMEBUFFER
-    vector<vector<Color>> frameBuffer(iHeight, vector<Color>(iWidth));
     char* data = new char[iWidth*iHeight*3];
 
-    /*for (int j = iHeight - 1; j >= 0; --j) 
-    {
-        std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
-        for (int i = 0; i < iWidth; ++i) 
-        {
-            Color pixel_color(0, 0, 0);
-            for (int s = 0; s < samples; s++)
-            {
-                auto u = (i + random()) / (iWidth - 1.0);
-                auto v = (j + random()) / (iHeight - 1.0);
-                Ray ray = cam.get_ray(u, v);// Getting ray originating from camera through the pixel with coords (u,v).
-                pixel_color += ray_color(ray, world, max_depth);// Getting Color the ray results in at the end.
-            }
-            frameBuffer[iHeight - 1 - j][i] = pixel_color;
-        }
-    }
-    
-    int index = 0;
-    //WRITING FRAMEBUFFER TO RENDER.PNG
-    for (int i = 0; i < iHeight; i++)
-    {
-        for (int j = 0; j < iWidth; j++)
-        {
-            auto scale = 1.0 / samples;
-            double r = sqrt(frameBuffer[i][j].x() * scale);
-            double g = sqrt(frameBuffer[i][j].y() * scale);
-            double b = sqrt(frameBuffer[i][j].z() * scale);
-
-            data[index++] = (256 * clamp(r, 0, 0.99));
-            data[index++] = (256 * clamp(g, 0, 0.99));
-            data[index++] = (256 * clamp(b, 0, 0.99));
-        }
-    }*/
     std::cerr << threadsNum << std::flush;
     for (unsigned t = 0; t < threadsNum; t++)
     {
-        threads[t] = thread(raytrace, &nextTileX, &nextTileY, &tileInfoMutex, tileWidth, tileHeight, iWidth, iHeight, samples, max_depth, world, cam, data);
+        threads[t] = thread(raytrace, &nextTileX, &nextTileY, &tileInfoMutex, tileWidth, tileHeight, iWidth, iHeight, samples, max_depth, background, world, cam, data);
     }
 
     for (unsigned int t = 0; t < threadsNum; t++)

@@ -26,12 +26,10 @@
     <ClInclude Include="Cone.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Perlin.h" />
-    <ClInclude Include="Plane.h" />
     <ClInclude Include="Hittable.h" />
     <ClInclude Include="Hittable_List.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Moving_Sphere.h" />
-    <ClInclude Include="Paraboloid.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RTMath.h" />
     <ClInclude Include="Scenes.h" />
@@ -40,6 +38,7 @@
     <ClInclude Include="stb_image_write.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Vec3.h" />
+    <ClInclude Include="AA_Rect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

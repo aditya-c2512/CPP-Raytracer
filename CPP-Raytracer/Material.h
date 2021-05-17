@@ -16,9 +16,13 @@ class Material
 {
 public :
 	virtual bool scatter(const Ray& ray_in, const hit_record& rec, Color& attenuation, Ray& scattered) const = 0;
+	virtual Color emitted(double u, double v, const Point3& p) const
+	{
+		return Color(0, 0, 0);
+	}
 };
 
-class MAT_Lambertian : public Material //CLASS FOT DIFFUSE MATERIALS
+class MAT_Lambertian : public Material //CLASS FOR DIFFUSE MATERIALS
 {
 public :
 	MAT_Lambertian(const Color& a) : albedo(make_shared<Solid_Color>(a)) {}
@@ -99,5 +103,24 @@ private :
 		r0 = r0 * r0;
 		return r0 + (1 - r0) * pow((1 - cosine), 5);
 	}
+};
+
+class MAT_Diffuse_Light : public Material
+{
+public :
+	MAT_Diffuse_Light() {}
+	MAT_Diffuse_Light(Color c) : emit(make_shared<Solid_Color>(c)) {}
+
+	virtual bool scatter(const Ray& ray_in, const hit_record& rec, Color& attenuation, Ray& scattered) const override
+	{
+		return false;
+	}
+
+	virtual Color emitted(double u, double v, const Point3& p) const override
+	{
+		return emit->value(u, v, p);
+	}
+
+	shared_ptr<Texture> emit;
 };
 #endif

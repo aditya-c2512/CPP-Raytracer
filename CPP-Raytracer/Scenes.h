@@ -4,7 +4,7 @@
 #include "Hittable_List.h"
 #include "Sphere.h"
 #include "Moving_Sphere.h"
-#include "Plane.h"
+#include "AA_Rect.h"
 #include "Material.h"
 
 Hittable_List two_spheres()
@@ -97,6 +97,40 @@ Hittable_List earth()
     auto earth = make_shared<Sphere>(Point3(0, 0, 0), 2, MAT_Earth);
 
     world.add(earth);
+    return world;
+}
+
+Hittable_List simple_light()
+{
+    Hittable_List world;
+
+    auto pertext = make_shared<Perlin_Texture>(4);
+    world.add(make_shared<Sphere>(Point3(0, -1000, 0), 1000, make_shared<MAT_Lambertian>(pertext)));
+    world.add(make_shared<Sphere>(Point3(0, 2, 0), 2, make_shared<MAT_Lambertian>(pertext)));
+
+    auto difflight = make_shared<MAT_Diffuse_Light>(Color(4, 4, 4));
+    world.add(make_shared<XY_Rect>(3, 5, 1, 3, -2, difflight));
+    world.add(make_shared<Sphere>(Point3(0, 6, 0), 2, difflight));
+
+    return world;
+}
+
+Hittable_List Cornell_Box()
+{
+    Hittable_List world;
+
+    auto MAT_Red = make_shared<MAT_Lambertian>(Color(.65, .05, .05));
+    auto MAT_Green = make_shared<MAT_Lambertian>(Color(.12, .45, .15));
+    auto MAT_White = make_shared<MAT_Lambertian>(Color(.73, .73, .73));
+    auto MAT_Light = make_shared<MAT_Diffuse_Light>(Color(15, 15, 15));
+
+    world.add(make_shared<YZ_Rect>(0, 555, 0, 555, 555, MAT_Green));
+    world.add(make_shared<YZ_Rect>(0, 555, 0, 555, 0, MAT_Red));
+    world.add(make_shared<XZ_Rect>(213, 343, 227, 332, 554, MAT_Light));
+    world.add(make_shared<XZ_Rect>(0, 555, 0, 555, 0, MAT_White));
+    world.add(make_shared<XZ_Rect>(0, 555, 0, 555, 555, MAT_White));
+    world.add(make_shared<XY_Rect>(0, 555, 0, 555, 555, MAT_White));
+
     return world;
 }
 
