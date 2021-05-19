@@ -1,2 +1,0 @@
-D:\Projects\CPP-Raytracer\CPP-Raytracer\x64\Debug\CPP-Raytracer.exe
-D:\Projects\CPP-Raytracer\CPP-Raytracer\x64\Debug\CPP-Raytracer.pdb
