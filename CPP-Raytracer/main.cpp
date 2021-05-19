@@ -105,18 +105,18 @@ int main()
     mutex tileInfoMutex;
 
     //IMAGE DIMENSIONS AND CONSTANTS
-    const auto aspectRatio = 1.0;
-    const int iWidth = 800;
+    const auto aspectRatio = 16.0 / 9.0;
+    const int iWidth = 1920;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
-    const int samples = 100;//INCREASE FOR LESS NOISE
-    const int max_depth = 20;
+    const int samples = 10000;//INCREASE FOR LESS NOISE
+    const int max_depth = 5;
 
     //WORLD OBJECTS
-    Color background(0.0, 0.0, 0.0);
-    Hittable_List world = Cornell_Box();
+    Color background(0, 0, 0);
+    Hittable_List world = final_scene();
 
     //CAMERA
-    Point3 lookFrom(278, 278, -800);
+    Point3 lookFrom(478, 278, -600);
     Point3 lookAt(278, 278, 0);
     Vec3 vUp(0, 1, 0);
     double vFOV = 40;

@@ -19,7 +19,7 @@ public :
 	{
 		auto objects = src_objects;
 		int axis = random_int(0, 2);
-		auto comparator = (axis == 0) ? box_x_compare : (axis == 1) ? box_y_compare : box_z_compare;
+		auto comparator = (axis == 0) ? &BVH_Node::box_x_compare : (axis == 1) ? &BVH_Node::box_y_compare : &BVH_Node::box_z_compare;
 
 		size_t object_span = end - start;
 
@@ -51,7 +51,7 @@ public :
 		BVH_Box = surrounding_box(box_left, box_right);
 	}
 
-	inline bool box_compare(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b, int axis) 
+	inline static bool box_compare(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b, int axis) 
 	{
 		AABB box_a;
 		AABB box_b;
@@ -62,17 +62,17 @@ public :
 		return box_a.min().e[axis] < box_b.min().e[axis];
 	}
 
-	bool box_x_compare(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b) 
+	static bool box_x_compare(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b) 
 	{
 		return box_compare(a, b, 0);
 	}
 
-	bool box_y_compare(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b) 
+	static bool box_y_compare(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b) 
 	{
 		return box_compare(a, b, 1);
 	}
 
-	bool box_z_compare(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b) 
+	static bool box_z_compare(const shared_ptr<Hittable> a, const shared_ptr<Hittable> b) 
 	{
 		return box_compare(a, b, 2);
 	}
