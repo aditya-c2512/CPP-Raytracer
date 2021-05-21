@@ -1,5 +1,0 @@
-﻿  main.cpp
-D:\Projects\CPP-Raytracer\CPP-Raytracer\main.cpp(89,44): warning C4244: '=': conversion from 'double' to 'char', possible loss of data
-D:\Projects\CPP-Raytracer\CPP-Raytracer\main.cpp(90,44): warning C4244: '=': conversion from 'double' to 'char', possible loss of data
-D:\Projects\CPP-Raytracer\CPP-Raytracer\main.cpp(91,44): warning C4244: '=': conversion from 'double' to 'char', possible loss of data
-  CPP-Raytracer.vcxproj -> D:\Projects\CPP-Raytracer\CPP-Raytracer\x64\Debug\CPP-Raytracer.exe
