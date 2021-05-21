@@ -143,19 +143,7 @@ Hittable_List Cornell_Box()
     box2 = make_shared<Translate>(box2, Vec3(130, 0, 65));
     world.add(make_shared<Volume>(box2, 0.01, Color(1, 1, 1)));
 
-    auto MAT_Earth = make_shared<MAT_Lambertian>(make_shared<Image_Texture>("earthmap.jpg"));
-    world.add(make_shared<Sphere>(Point3(400, 200, 400), 100, MAT_Earth));
-    auto pertext = make_shared<Perlin_Texture>(0.1);
-    world.add(make_shared<Sphere>(Point3(220, 280, 300), 80, make_shared<MAT_Lambertian>(pertext)));
-
-    Hittable_List boxes2;
-    int ns = 1000;
-    for (int j = 0; j < ns; j++) 
-    {
-        boxes2.add(make_shared<Sphere>(random_vec(0, 165), 10, MAT_White));
-    }
-
-    world.add(make_shared<Translate>(make_shared<Rotate_Y>(make_shared<BVH_Node>(boxes2, 0.0, 1.0), 15), Vec3(-100, 270, 395)));
+    
 
     return world;
 }
@@ -204,6 +192,21 @@ Hittable_List final_scene()
     world.add(make_shared<Volume>(boundary, 0.2, Color(0.2, 0.4, 0.9)));
     boundary = make_shared<Sphere>(Point3(0, 0, 0), 5000, make_shared<MAT_Dielectric>(1.5));
     world.add(make_shared<Volume>(boundary, .0001, Color(1, 1, 1)));
+
+    auto MAT_Earth = make_shared<MAT_Lambertian>(make_shared<Image_Texture>("earthmap.jpg"));
+    world.add(make_shared<Sphere>(Point3(400, 200, 400), 100, MAT_Earth));
+    auto pertext = make_shared<Perlin_Texture>(0.1);
+    world.add(make_shared<Sphere>(Point3(220, 280, 300), 80, make_shared<MAT_Lambertian>(pertext)));
+
+    Hittable_List boxes2;
+    auto MAT_Box2 = make_shared<MAT_Lambertian>(Color(0.836, 0.504, 0.766));
+    int ns = 1000;
+    for (int j = 0; j < ns; j++)
+    {
+        boxes2.add(make_shared<Sphere>(random_vec(0, 165), 10, MAT_Box2));
+    }
+
+    world.add(make_shared<Translate>(make_shared<Rotate_Y>(make_shared<BVH_Node>(boxes2, 0.0, 1.0), 15), Vec3(-100, 270, 395)));
 
     return world;
 }

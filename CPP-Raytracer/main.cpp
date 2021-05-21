@@ -87,9 +87,13 @@ void raytrace(int* nextTileX, int* nextTileY, std::mutex* tileInfoMutex, int til
                 data[bufferIdx + 0] = r;
                 data[bufferIdx + 1] = g;
                 data[bufferIdx + 2] = b;
+
+                std::cerr << "Pixel Done" << std::flush;
             }
         }
     }
+
+    std::cerr << "Thread Done" << std::flush;
 }
 
 using namespace std;
@@ -105,11 +109,11 @@ int main()
     mutex tileInfoMutex;
 
     //IMAGE DIMENSIONS AND CONSTANTS
-    const auto aspectRatio = 16.0 / 9.0;
-    const int iWidth = 1920;
+    const auto aspectRatio = 1.0;
+    const int iWidth = 600;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
-    const int samples = 10000;//INCREASE FOR LESS NOISE
-    const int max_depth = 5;
+    const int samples = 500;//INCREASE FOR LESS NOISE
+    const int max_depth = 15;
 
     //WORLD OBJECTS
     Color background(0, 0, 0);
