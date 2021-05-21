@@ -19,6 +19,8 @@
 #include <thread>
 #include <mutex>
 
+long int pixelsDone = 0;
+
 Color ray_color(const Ray& ray, const Color& background,const Hittable& world, int depth) //DECIDES COL0R ON A RAYTRACE
 {
     hit_record rec;//STORES IMPORTANT INFO OF THE CLOSEST OBJECT HIT BY A RAY
@@ -84,11 +86,11 @@ void raytrace(int* nextTileX, int* nextTileY, std::mutex* tileInfoMutex, int til
 
                 int bufferIdx = (i + ((ny - 1) - j) * nx) * 3;
 
-                data[bufferIdx + 0] = r;
-                data[bufferIdx + 1] = g;
-                data[bufferIdx + 2] = b;
+                data[bufferIdx + 0] = clamp(r, 0, 255);
+                data[bufferIdx + 1] = clamp(g, 0, 255);
+                data[bufferIdx + 2] = clamp(b, 0, 255);
 
-                std::cerr << "Pixel Done" << std::flush;
+                std::cerr << (pixelsDone++) << " " << std::flush;
             }
         }
     }
@@ -110,10 +112,10 @@ int main()
 
     //IMAGE DIMENSIONS AND CONSTANTS
     const auto aspectRatio = 1.0;
-    const int iWidth = 600;
+    const int iWidth = 800;
     const int iHeight = static_cast<int>(iWidth/aspectRatio);
     const int samples = 500;//INCREASE FOR LESS NOISE
-    const int max_depth = 15;
+    const int max_depth = 25;
 
     //WORLD OBJECTS
     Color background(0, 0, 0);
@@ -124,7 +126,7 @@ int main()
     Point3 lookAt(278, 278, 0);
     Vec3 vUp(0, 1, 0);
     double vFOV = 40;
-    auto dist_to_focus = 10.0;//DISTANCE FROM FOCUS PLANE
+    auto dist_to_focus = 1000.0;//DISTANCE FROM FOCUS PLANE
     auto aperture = 0.1;//DIAMETER OF APERTURE
 
     Camera cam(lookFrom, lookAt, vUp, vFOV, aspectRatio, aperture, dist_to_focus, 0.0, 1.0);
