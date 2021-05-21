@@ -78,9 +78,9 @@ void raytrace(int* nextTileX, int* nextTileY, std::mutex* tileInfoMutex, int til
                 color /= double(ns);
                 color = Color(sqrt(color[0]), sqrt(color[1]), sqrt(color[2]));
 
-                int r = (int)(255.99 * color[0]);
-                int g = (int)(255.99 * color[1]);
-                int b = (int)(255.99 * color[2]);
+                int r = (int)(255 * color[0]);
+                int g = (int)(255 * color[1]);
+                int b = (int)(255 * color[2]);
 
                 int bufferIdx = (i + ((ny - 1) - j) * nx) * 3;
 
