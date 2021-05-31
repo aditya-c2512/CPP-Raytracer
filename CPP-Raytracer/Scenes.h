@@ -4,11 +4,22 @@
 #include "Hittable_List.h"
 #include "Sphere.h"
 #include "Moving_Sphere.h"
+#include "Triangle.h"
 #include "AA_Rect.h"
 #include "Box.h"
 #include "Volume.h"
 #include "BVH_Node.h"
 #include "Material.h"
+
+Hittable_List triangleTest()
+{
+    Hittable_List world;
+    auto triangle = make_shared<Triangle>(Point3(0,5,-5), Point3(5,0,-5), Point3(0,0,-2), make_shared<MAT_Lambertian>(Color(1, 0, 0)));
+    world.add(triangle);
+    //auto MAT_Light = make_shared<MAT_Diffuse_Light>(Color(15, 15, 15));
+    //world.add(make_shared<XZ_Rect>(-10, 10, -10, 10, 10, MAT_Light));
+    return world;
+}
 
 Hittable_List two_spheres()
 {

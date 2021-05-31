@@ -38,6 +38,7 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="stb_image_write.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="AA_Rect.h" />
     <ClInclude Include="Volume.h" />

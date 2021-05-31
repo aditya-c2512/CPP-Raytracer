@@ -84,6 +84,9 @@
     <ClInclude Include="Volume.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Header Files\Shapes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
