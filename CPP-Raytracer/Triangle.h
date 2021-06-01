@@ -39,7 +39,7 @@ bool Triangle::hit(const Ray& ray, double t_min, double t_max, hit_record& rec) 
 	double bary[3];
 	bary[0] = dot(s, q);
 	bary[1] = dot(r, ray.direction());
-	bary[2] = 1.0f - b[0] - b[1];
+	bary[2] = 1.0f - bary[0] - bary[1];
 
 	if ((bary[0] < 0.0f) || (bary[1] < 0.0f) || (bary[2] < 0.0f)) return false;
 

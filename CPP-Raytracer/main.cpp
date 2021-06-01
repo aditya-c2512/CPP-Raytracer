@@ -118,11 +118,11 @@ int main()
     const int max_depth = 5;
 
     //WORLD OBJECTS
-    Color background(0, 01, 0);
+    Color background(0, 0, 0);
     Hittable_List world = triangleTest();
 
     //CAMERA
-    Point3 lookFrom(0, 0, 0);
+    Point3 lookFrom(0, 0, 10);
     Point3 lookAt(0, 0, -5);
     Vec3 vUp(0, 1, 0);
     double vFOV = 40;
